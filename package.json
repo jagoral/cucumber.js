@@ -6,7 +6,8 @@
 	"scripts": {
 		"build": "turbo build",
 		"lint": "biome check .",
-		"lint:fix": "biome check --apply ."
+		"lint:fix": "biome check --apply .",
+		"test:run": "turbo test:run"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.6.3",
