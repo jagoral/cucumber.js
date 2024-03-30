@@ -6,10 +6,10 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
-    "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "lint": "turbo lint"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.6.3",
     "@repo/typescript-config": "workspace:*",
     "turbo": "latest"
   },
