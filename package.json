@@ -1,20 +1,21 @@
 {
-  "name": "@jagoral/vitest-cucumber-source",
-  "version": "0.0.1",
-  "description": "A Cucumber-ish plugin for vitest",
-  "private": true,
-  "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
-    "lint": "turbo lint"
-  },
-  "devDependencies": {
-    "@biomejs/biome": "1.6.3",
-    "@repo/typescript-config": "workspace:*",
-    "turbo": "latest"
-  },
-  "packageManager": "pnpm@8.15.5",
-  "engines": {
-    "node": ">=18"
-  }
+	"name": "@jagoral/vitest-cucumber-source",
+	"version": "0.0.1",
+	"description": "A Cucumber-ish plugin for vitest",
+	"private": true,
+	"scripts": {
+		"build": "turbo build",
+		"lint": "biome check .",
+		"lint:fix": "biome check --apply ."
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.6.3",
+		"@repo/typescript-config": "workspace:*",
+		"lefthook": "1.6.7",
+		"turbo": "latest"
+	},
+	"packageManager": "pnpm@8.15.5",
+	"engines": {
+		"node": ">=18"
+	}
 }
