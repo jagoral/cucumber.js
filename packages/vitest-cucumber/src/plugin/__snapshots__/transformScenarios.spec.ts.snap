@@ -1,0 +1,43 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`transformScenarios > should add .build() at the end of the chain 1`] = `
+"scenario("test")
+  .when("a", () => {})
+  .then("b", () => {})
+  .and("c", () => {})
+  .build();
+"
+`;
+
+exports[`transformScenarios > should add .build() to all scenarios 1`] = `
+"scenario("test1")
+  .when("a", () => {})
+  .then("b", () => {})
+  .and("c", () => {})
+  .build();
+scenario("test2")
+  .given("something", {})
+  .when("a", () => {})
+  .then("b", () => {})
+  .build();
+"
+`;
+
+exports[`transformScenarios > should add .build() when chain identifier 1`] = `
+"scenario
+  .only("test")
+  .when("a", () => {})
+  .then("b", () => {})
+  .and("c", () => {})
+  .build();
+"
+`;
+
+exports[`transformScenarios > should skip adding .build() when its already added 1`] = `
+"scenario("test")
+  .when("a", () => {})
+  .then("b", () => {})
+  .and("c", () => {})
+  .build();
+"
+`;
