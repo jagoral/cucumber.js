@@ -2,7 +2,6 @@ import type { InferVariables, Merge } from "../helpers";
 
 export type ScenarioContext = {
 	scenarioName: string;
-	type: "scenario" | "scenarioOutline";
 	chainIdentifier?: "skip" | "only";
 };
 

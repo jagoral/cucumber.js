@@ -1,49 +1,23 @@
-import { createTest } from "./createTest";
-import type {
-	Callback,
-	CallbackReturningFullState,
-	StateAfterStep,
-	StepConstruct,
-} from "./types";
+import { AbstractStep } from "./abstractStep";
+import { createScenarioOutlineTests } from "./createTest";
+import type { Callback, ScenarioContext, StateAfterStep } from "./types";
 
-export abstract class AbstractStep<
-	TName extends string = string,
-	TState = any,
-	TStepReturn extends object | void = any,
-> {
-	protected readonly name: string;
-	protected readonly callback: CallbackReturningFullState<
-		TName,
-		TState,
-		TStepReturn
-	>;
-	protected currentSteps: AbstractStep<any, any, any>[];
+export class ScenarioOutline {
+	constructor(private context: ScenarioContext) {}
 
-	constructor(
-		previousSteps: AbstractStep<string, any, any>[],
-		protected stepConstruct: StepConstruct<
-			TName,
-			Callback<TName, TState, TStepReturn>
-		>,
+	given<TName extends string, TGivenReturn extends object | void>(
+		step: TName,
+		callback: Callback<TName, Record<string, never>, TGivenReturn>,
 	) {
-		this.currentSteps = [...previousSteps, this];
-		this.name = stepConstruct.name;
-		this.callback = (async (state: any) => {
-			return { ...state, ...(await stepConstruct.callback(state)) };
-		}) as any;
-	}
-
-	abstract toString(): string;
-
-	getMetadata() {
-		return {
-			name: this.name,
-			callback: this.callback,
-		};
+		return new Given<TName, Record<string, never>, TGivenReturn>([], {
+			name: step,
+			callback,
+			context: this.context,
+		});
 	}
 }
 
-export class Given<
+class Given<
 	TName extends string = string,
 	TState = any,
 	TStepReturn extends object | void = void,
@@ -147,7 +121,11 @@ class Then<
 	}
 
 	build() {
-		createTest(this.currentSteps, this.stepConstruct.context, this._examples);
+		createScenarioOutlineTests(
+			this.currentSteps,
+			this.stepConstruct.context,
+			this._examples,
+		);
 	}
 
 	examples(examplesToRegister: [TVariables, ...TVariables[]]) {

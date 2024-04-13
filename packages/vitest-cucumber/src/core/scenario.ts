@@ -1,44 +1,8 @@
-import { Given } from "./steps";
-import type { Callback, ScenarioContext } from "./types";
+import { AbstractStep } from "./abstractStep";
+import { createScenarioTest } from "./createTest";
+import type { Callback, ScenarioContext, StateAfterStep } from "./types";
 
-export function scenario(
-	scenarioName: string,
-	context?: Omit<ScenarioContext, "scenarioName">,
-) {
-	return new Scenario({ scenarioName, type: "scenario", ...context });
-}
-
-export function scenarioOutline(
-	scenarioName: string,
-	context?: Omit<ScenarioContext, "scenarioName">,
-) {
-	return new Scenario({ scenarioName, type: "scenarioOutline", ...context });
-}
-
-const scenarioWithContextFactory =
-	(context: Omit<ScenarioContext, "scenarioName">) => (scenarioName: string) =>
-		scenario(scenarioName, context);
-
-scenario.only = scenarioWithContextFactory({
-	chainIdentifier: "only",
-	type: "scenario",
-});
-scenario.skip = scenarioWithContextFactory({
-	chainIdentifier: "only",
-	type: "scenario",
-});
-
-scenarioOutline.only = scenarioWithContextFactory({
-	chainIdentifier: "only",
-	type: "scenarioOutline",
-});
-
-scenarioOutline.skip = scenarioWithContextFactory({
-	chainIdentifier: "skip",
-	type: "scenarioOutline",
-});
-
-class Scenario {
+export class Scenario {
 	constructor(private context: ScenarioContext) {}
 
 	given<TName extends string, TGivenReturn extends object | void>(
@@ -50,5 +14,109 @@ class Scenario {
 			callback,
 			context: this.context,
 		});
+	}
+}
+
+export class Given<
+	TName extends string = string,
+	TState = any,
+	TStepReturn extends object | void = void,
+	TStateAfterStep = StateAfterStep<TName, TState, TStepReturn>,
+> extends AbstractStep<TName, TState, TStepReturn> {
+	and<TName extends string, TAndReturn extends object | never>(
+		name: TName,
+		callback: Callback<TName, TStateAfterStep, TAndReturn>,
+	) {
+		return new Given<TName, TStateAfterStep, TAndReturn>(this.currentSteps, {
+			name,
+			callback,
+			context: this.stepConstruct.context,
+		});
+	}
+
+	when<TName extends string, TWhenReturn extends object | void>(
+		name: TName,
+		callback: Callback<TName, TStateAfterStep, TWhenReturn>,
+	) {
+		return new When<TName, TStateAfterStep, TWhenReturn>(this.currentSteps, {
+			name,
+			callback,
+			context: this.stepConstruct.context,
+		});
+	}
+
+	toString() {
+		if (this.currentSteps.at(-2) instanceof Given) {
+			return `And ${this.name}`;
+		}
+
+		return `Given ${this.name}`;
+	}
+}
+
+class When<
+	TName extends string = string,
+	TState = any,
+	TStepReturn extends object | void = void,
+	TStateAfterStep = StateAfterStep<TName, TState, TStepReturn>,
+> extends AbstractStep<TName, TState, TStepReturn> {
+	and<TName extends string, TAndReturn extends object | void>(
+		name: TName,
+		callback: Callback<TName, TStateAfterStep, TAndReturn>,
+	) {
+		return new When<TName, TStateAfterStep, TAndReturn>(this.currentSteps, {
+			name,
+			callback,
+			context: this.stepConstruct.context,
+		});
+	}
+
+	// biome-ignore lint/suspicious/noThenProperty: <explanation>
+	then<TName extends string>(
+		name: TName,
+		callback: Callback<TName, TStateAfterStep, void>,
+	) {
+		return new Then<TName, TStateAfterStep>(this.currentSteps, {
+			name,
+			callback,
+			context: this.stepConstruct.context,
+		});
+	}
+
+	toString() {
+		if (this.currentSteps.at(-2) instanceof When) {
+			return `And ${this.name}`;
+		}
+
+		return `When ${this.name}`;
+	}
+}
+
+class Then<TName extends string, TState = any> extends AbstractStep<
+	TName,
+	TState,
+	void
+> {
+	and<TName extends string>(
+		name: TName,
+		callback: Callback<TName, TState, void>,
+	) {
+		return new Then<TName, TState>(this.currentSteps, {
+			name,
+			callback,
+			context: this.stepConstruct.context,
+		});
+	}
+
+	toString() {
+		if (this.currentSteps.at(-2) instanceof Then) {
+			return `And ${this.name}`;
+		}
+
+		return `Then ${this.name}`;
+	}
+
+	build() {
+		createScenarioTest(this.currentSteps, this.stepConstruct.context);
 	}
 }

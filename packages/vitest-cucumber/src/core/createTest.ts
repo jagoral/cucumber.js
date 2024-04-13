@@ -1,27 +1,12 @@
 import { describe, test } from "vitest";
 import { injectVariables } from "../helpers";
-import type { AbstractStep } from "./steps";
+import type { AbstractStep } from "./abstractStep";
 import type { ScenarioContext } from "./types";
 
-export function createTest(
+export function createScenarioTest(
 	steps: AbstractStep[],
 	context: ScenarioContext,
-	examples: [any, ...any[]] | undefined,
 ) {
-	switch (context.type) {
-		case "scenario": {
-			return createScenarioTest(steps, context);
-		}
-		case "scenarioOutline": {
-			if (!examples)
-				throw new Error("Examples are required for scenario outlines");
-
-			return createScenarioOutlineTests(steps, context, examples);
-		}
-	}
-}
-
-function createScenarioTest(steps: AbstractStep[], context: ScenarioContext) {
 	const { chainIdentifier } = context;
 	const stepsToString = steps.map((step) => step.toString()).join(", ");
 	const testFn = chainIdentifier ? test[chainIdentifier] : test;
@@ -36,15 +21,24 @@ function createScenarioTest(steps: AbstractStep[], context: ScenarioContext) {
 	});
 }
 
-function createScenarioOutlineTests(
+export function createScenarioOutlineTests(
 	steps: AbstractStep[],
 	context: ScenarioContext,
-	examples: [any, ...any[]],
+	examples: [any, ...any[]] | undefined,
 ) {
 	const { chainIdentifier } = context;
 	const testFn = chainIdentifier ? test[chainIdentifier] : test;
 
-	describe(`Scenario: ${context.scenarioName}`, () => {
+	describe(`Scenario Outline: ${context.scenarioName}`, () => {
+		if (!examples) {
+			const stepsToString = steps.map((step) => step.toString()).join(", ");
+			test(stepsToString, async () => {
+				throw new Error("No examples provided for scenario outline");
+			});
+
+			return;
+		}
+
 		for (const example of examples) {
 			const stepsToString = steps
 				.map((step) => injectVariables(step.toString(), example))

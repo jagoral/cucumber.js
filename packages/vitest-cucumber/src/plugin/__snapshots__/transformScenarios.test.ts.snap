@@ -9,6 +9,15 @@ exports[`transformScenarios > should add .build() at the end of the chain 1`] = 
 "
 `;
 
+exports[`transformScenarios > should add .build() at the end of the scenarioOutline chain 1`] = `
+"scenarioOutline("test")
+  .when("a", () => {})
+  .then("b", () => {})
+  .and("c", () => {})
+  .build();
+"
+`;
+
 exports[`transformScenarios > should add .build() to all scenarios 1`] = `
 "scenario("test1")
   .when("a", () => {})

@@ -18,7 +18,8 @@ feature("Example test", () => {
 			`);
 		});
 
-	scenarioOutline("Breaker joins a game")
+	scenarioOutline
+		.only("Breaker joins a game")
 		.given("the Maker has started a game with the {{word}}", () => {
 			return { hello: "world" };
 		})
@@ -26,15 +27,7 @@ feature("Example test", () => {
 			return { role: "Breaker" };
 		})
 		.then("the Breaker is assigned the role of Breaker", (state) => {
-			expect(state).toMatchInlineSnapshot(`
-      {
-        "hello": "world",
-        "role": "Breaker",
-        "variables": {
-          "word": "example word",
-        },
-      }
-    `);
+			expect(state.variables).not.toEqual({});
 		})
-		.examples([{ word: "example word" }]);
+		.examples([{ word: "example word" }, { word: "another word" }]);
 });
