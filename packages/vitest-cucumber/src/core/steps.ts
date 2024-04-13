@@ -1,51 +1,70 @@
 import { createTest } from "./createTest";
-import type { MergeState, StepConstruct, StepReturn } from "./types";
+import type {
+	Callback,
+	CallbackReturningFullState,
+	StateAfterStep,
+	StepConstruct,
+} from "./types";
 
 export abstract class AbstractStep<
-	TState extends object = any,
-	TCallbackReturn extends object | void = void,
+	TName extends string = string,
+	TState = any,
+	TStepReturn extends object | void = any,
 > {
-	public readonly name: string;
-	public readonly callback: (
-		state: TState,
-	) => Promise<MergeState<TState, TCallbackReturn>>;
-	public currentSteps: AbstractStep<any, any>[];
+	protected readonly name: string;
+	protected readonly callback: CallbackReturningFullState<
+		TName,
+		TState,
+		TStepReturn
+	>;
+	protected currentSteps: AbstractStep<any, any, any>[];
 
 	constructor(
-		previousSteps: AbstractStep<any, any>[],
-		protected stepConstruct: StepConstruct<TState, TCallbackReturn>,
+		previousSteps: AbstractStep<string, any, any>[],
+		protected stepConstruct: StepConstruct<
+			TName,
+			Callback<TName, TState, TStepReturn>
+		>,
 	) {
 		this.currentSteps = [...previousSteps, this];
 		this.name = stepConstruct.name;
-		this.callback = async (state: TState) => {
-			return { ...state, ...(await stepConstruct.callback(state)) } as any;
-		};
+		this.callback = (async (state: any) => {
+			return { ...state, ...(await stepConstruct.callback(state)) };
+		}) as any;
 	}
 
 	abstract toString(): string;
+
+	getMetadata() {
+		return {
+			name: this.name,
+			callback: this.callback,
+		};
+	}
 }
 
 export class Given<
-	TState extends object = any,
-	TCallbackReturn extends object | void = void,
-	TCurrentReturn extends object = MergeState<TState, TCallbackReturn>,
-> extends AbstractStep<TState, TCallbackReturn> {
-	and<TAndReturn extends object | never>(
-		name: string,
-		callback: (state: TCurrentReturn) => StepReturn<TAndReturn>,
+	TName extends string = string,
+	TState = any,
+	TStepReturn extends object | void = void,
+	TStateAfterStep = StateAfterStep<TName, TState, TStepReturn>,
+> extends AbstractStep<TName, TState, TStepReturn> {
+	and<TName extends string, TAndReturn extends object | never>(
+		name: TName,
+		callback: Callback<TName, TStateAfterStep, TAndReturn>,
 	) {
-		return new Given<TCurrentReturn, TAndReturn>(this.currentSteps, {
+		return new Given<TName, TStateAfterStep, TAndReturn>(this.currentSteps, {
 			name,
 			callback,
 			context: this.stepConstruct.context,
 		});
 	}
 
-	when<TWhenReturn extends object | void>(
-		name: string,
-		callback: (state: TCurrentReturn) => StepReturn<TWhenReturn>,
+	when<TName extends string, TWhenReturn extends object | void>(
+		name: TName,
+		callback: Callback<TName, TStateAfterStep, TWhenReturn>,
 	) {
-		return new When<TCurrentReturn, TWhenReturn>(this.currentSteps, {
+		return new When<TName, TStateAfterStep, TWhenReturn>(this.currentSteps, {
 			name,
 			callback,
 			context: this.stepConstruct.context,
@@ -62,15 +81,16 @@ export class Given<
 }
 
 class When<
-	TState extends object = any,
-	TCallbackReturn extends object | void = void,
-	TCurrentReturn extends object = MergeState<TState, TCallbackReturn>,
-> extends AbstractStep<TState, TCallbackReturn> {
-	and<TAndReturn extends object | void>(
-		name: string,
-		callback: (state: TCurrentReturn) => StepReturn<TAndReturn>,
+	TName extends string = string,
+	TState = any,
+	TStepReturn extends object | void = void,
+	TStateAfterStep = StateAfterStep<TName, TState, TStepReturn>,
+> extends AbstractStep<TName, TState, TStepReturn> {
+	and<TName extends string, TAndReturn extends object | void>(
+		name: TName,
+		callback: Callback<TName, TStateAfterStep, TAndReturn>,
 	) {
-		return new When<TCurrentReturn, TAndReturn>(this.currentSteps, {
+		return new When<TName, TStateAfterStep, TAndReturn>(this.currentSteps, {
 			name,
 			callback,
 			context: this.stepConstruct.context,
@@ -78,8 +98,11 @@ class When<
 	}
 
 	// biome-ignore lint/suspicious/noThenProperty: <explanation>
-	then(name: string, callback: (state: TCurrentReturn) => StepReturn<void>) {
-		return new Then<TCurrentReturn>(this.currentSteps, {
+	then<TName extends string>(
+		name: TName,
+		callback: Callback<TName, TStateAfterStep, void>,
+	) {
+		return new Then<TName, TStateAfterStep>(this.currentSteps, {
 			name,
 			callback,
 			context: this.stepConstruct.context,
@@ -95,9 +118,20 @@ class When<
 	}
 }
 
-class Then<TState extends object = any> extends AbstractStep<TState, void> {
-	and(name: string, callback: (state: TState) => StepReturn<void>) {
-		return new Then<TState>(this.currentSteps, {
+class Then<
+	TName extends string,
+	TState = any,
+	TVariables = TState extends { variables: infer TVariables }
+		? TVariables
+		: never,
+> extends AbstractStep<TName, TState, void> {
+	private _examples: [TVariables, ...TVariables[]] | undefined;
+
+	and<TName extends string>(
+		name: TName,
+		callback: Callback<TName, TState, void>,
+	) {
+		return new Then<TName, TState>(this.currentSteps, {
 			name,
 			callback,
 			context: this.stepConstruct.context,
@@ -113,6 +147,11 @@ class Then<TState extends object = any> extends AbstractStep<TState, void> {
 	}
 
 	build() {
-		createTest(this.currentSteps, this.stepConstruct.context);
+		createTest(this.currentSteps, this.stepConstruct.context, this._examples);
+	}
+
+	examples(examplesToRegister: [TVariables, ...TVariables[]]) {
+		this._examples = examplesToRegister;
+		return this;
 	}
 }

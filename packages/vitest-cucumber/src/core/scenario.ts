@@ -1,28 +1,54 @@
 import { Given } from "./steps";
-import type { ScenarioContext } from "./types";
+import type { Callback, ScenarioContext } from "./types";
 
 export function scenario(
 	scenarioName: string,
 	context?: Omit<ScenarioContext, "scenarioName">,
 ) {
-	return new Scenario({ scenarioName, ...context });
+	return new Scenario({ scenarioName, type: "scenario", ...context });
 }
 
-const scenarioWithChainIdentifierFactory =
-	(chainIdentifier: ScenarioContext["chainIdentifier"]) =>
-	(scenarioName: string) =>
-		scenario(scenarioName, { chainIdentifier });
+export function scenarioOutline(
+	scenarioName: string,
+	context?: Omit<ScenarioContext, "scenarioName">,
+) {
+	return new Scenario({ scenarioName, type: "scenarioOutline", ...context });
+}
 
-scenario.only = scenarioWithChainIdentifierFactory("only");
-scenario.skip = scenarioWithChainIdentifierFactory("skip");
+const scenarioWithContextFactory =
+	(context: Omit<ScenarioContext, "scenarioName">) => (scenarioName: string) =>
+		scenario(scenarioName, context);
+
+scenario.only = scenarioWithContextFactory({
+	chainIdentifier: "only",
+	type: "scenario",
+});
+scenario.skip = scenarioWithContextFactory({
+	chainIdentifier: "only",
+	type: "scenario",
+});
+
+scenarioOutline.only = scenarioWithContextFactory({
+	chainIdentifier: "only",
+	type: "scenarioOutline",
+});
+
+scenarioOutline.skip = scenarioWithContextFactory({
+	chainIdentifier: "skip",
+	type: "scenarioOutline",
+});
 
 class Scenario {
 	constructor(private context: ScenarioContext) {}
 
-	given<TCallback extends () => any>(step: string, callback: TCallback) {
-		return new Given<Record<string, never>, Awaited<ReturnType<TCallback>>>(
-			[],
-			{ name: step, callback, context: this.context },
-		);
+	given<TName extends string, TGivenReturn extends object | void>(
+		step: TName,
+		callback: Callback<TName, Record<string, never>, TGivenReturn>,
+	) {
+		return new Given<TName, Record<string, never>, TGivenReturn>([], {
+			name: step,
+			callback,
+			context: this.context,
+		});
 	}
 }

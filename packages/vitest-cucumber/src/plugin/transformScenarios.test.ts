@@ -20,6 +20,17 @@ describe("transformScenarios", () => {
 		expect(await getTransformedScenario(code)).toMatchSnapshot();
 	});
 
+	it("should add .build() at the end of the scenarioOutline chain", async () => {
+		const code = `
+      scenarioOutline("test")
+        .when("a", () => {})
+        .then("b", () => {})
+        .and("c", () => {});
+    `;
+
+		expect(await getTransformedScenario(code)).toMatchSnapshot();
+	});
+
 	it("should skip adding .build() when its already added", async () => {
 		const code = `
     scenario("test")

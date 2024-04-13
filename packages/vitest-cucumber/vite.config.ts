@@ -6,6 +6,10 @@ import { defineConfig } from "vite";
 import { vitestCucumberPlugin } from "./src/plugin";
 
 export default defineConfig({
-	test: {},
+	test: {
+		typecheck: {
+			enabled: true,
+		},
+	},
 	plugins: [vitestCucumberPlugin()],
 });

@@ -4,13 +4,18 @@ const { identifier, memberExpression, callExpression } = recast.types.builders;
 const { MemberExpression, ExpressionStatement, Identifier, CallExpression } =
 	recast.types.namedTypes;
 
+const scenarioNames = ["scenario", "scenarioOutline"];
+
 export function transformScenarios(code: string): string {
 	const ast = recast.parse(code);
 	recast.visit(ast, {
 		visitCallExpression(path) {
 			const { node } = path;
 
-			if (Identifier.check(node.callee) && node.callee.name === "scenario") {
+			if (
+				Identifier.check(node.callee) &&
+				scenarioNames.includes(node.callee.name)
+			) {
 				const rootCallExpressionPath = findRootCallExpressionPath(path);
 
 				const rootCallExpressionNode = rootCallExpressionPath?.node;
@@ -36,7 +41,10 @@ export function transformScenarios(code: string): string {
 
 			// Check if the member expression is a scenario object
 			// Case: scenario.only, scenario.skip
-			if (Identifier.check(node.object) && node.object.name === "scenario") {
+			if (
+				Identifier.check(node.object) &&
+				scenarioNames.includes(node.object.name)
+			) {
 				const rootCallExpressionPath = findRootCallExpressionPath(path);
 
 				const rootCallExpressionNode = rootCallExpressionPath?.node;
