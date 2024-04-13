@@ -18,8 +18,7 @@ feature("Example test", () => {
 			`);
 		});
 
-	scenarioOutline
-		.only("Breaker joins a game")
+	scenarioOutline("Breaker joins a game")
 		.given("the Maker has started a game with the {{word}}", () => {
 			return { hello: "world" };
 		})

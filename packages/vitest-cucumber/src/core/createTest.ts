@@ -1,4 +1,6 @@
 import { describe, test } from "vitest";
+import type { TestFunction } from "vitest";
+import { expect } from "vitest";
 import { injectVariables } from "../helpers";
 import type { AbstractStep } from "./abstractStep";
 import type { ScenarioContext } from "./types";
@@ -7,9 +9,8 @@ export function createScenarioTest(
 	steps: AbstractStep[],
 	context: ScenarioContext,
 ) {
-	const { chainIdentifier } = context;
+	const testFn = getTestFn(context);
 	const stepsToString = steps.map((step) => step.toString()).join(", ");
-	const testFn = chainIdentifier ? test[chainIdentifier] : test;
 
 	describe(`Scenario: ${context.scenarioName}`, () => {
 		testFn(stepsToString, async () => {
@@ -26,14 +27,13 @@ export function createScenarioOutlineTests(
 	context: ScenarioContext,
 	examples: [any, ...any[]] | undefined,
 ) {
-	const { chainIdentifier } = context;
-	const testFn = chainIdentifier ? test[chainIdentifier] : test;
+	const testFn = getTestFn(context);
 
 	describe(`Scenario Outline: ${context.scenarioName}`, () => {
 		if (!examples) {
 			const stepsToString = steps.map((step) => step.toString()).join(", ");
 			test(stepsToString, async () => {
-				throw new Error("No examples provided for scenario outline");
+				expect.fail("No examples provided for scenario outline");
 			});
 
 			return;
@@ -52,4 +52,12 @@ export function createScenarioOutlineTests(
 			});
 		}
 	});
+}
+
+function getTestFn(context: ScenarioContext) {
+	const { testOptions } = context;
+	return testOptions
+		? (name: string, callback: TestFunction) =>
+				test(name, testOptions, callback)
+		: test;
 }

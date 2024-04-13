@@ -1,8 +1,9 @@
+import type { TestOptions } from "vitest";
 import type { InferVariables, Merge } from "../helpers";
 
 export type ScenarioContext = {
 	scenarioName: string;
-	chainIdentifier?: "skip" | "only";
+	testOptions?: TestOptions;
 };
 
 export type MergeState<TState, TEnhancedState> = Merge<TState, TEnhancedState>;
