@@ -1,38 +1,38 @@
 {
-	"name": "@jagoral/vitest-cucumber",
-	"version": "0.0.1",
-	"description": "A Cucumber-ish plugin for vitest",
-	"type": "module",
-	"main": "dist/index.cjs",
-	"module": "dist/index.mjs",
-	"types": "dist/index.d.ts",
-	"files": ["dist", "src"],
-	"exports": {
-		".": {
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.cjs",
-			"types": "./dist/index.d.ts"
-		}
-	},
-	"scripts": {
-		"build": "tsup",
-		"lint": "biome check .",
-		"lint:fix": "biome check --apply .",
-		"test": "vitest",
-		"test:run": "vitest run"
-	},
-	"dependencies": {
-		"vite": "^5.2.7",
-		"vitest": "^1.4.0"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "1.6.3",
-		"@repo/typescript-config": "workspace:*",
-		"prettier": "3.2.5",
-		"recast": "0.23.6",
-		"tsup": "8.0.2",
-		"type-fest": "4.15.0",
-		"typescript": "5.4.3",
-		"unplugin-ast": "^0.9.0"
-	}
+  "name": "@jagoral/vitest-cucumber",
+  "version": "0.0.1",
+  "description": "A Cucumber-ish plugin for vitest",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "files": ["dist", "src"],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "lint": "biome check .",
+    "lint:fix": "biome check --apply .",
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "dependencies": {
+    "vite": "^5.2.7",
+    "vitest": "^1.4.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.6.3",
+    "@repo/typescript-config": "workspace:*",
+    "prettier": "3.2.5",
+    "recast": "0.23.6",
+    "tsup": "8.0.2",
+    "type-fest": "4.15.0",
+    "typescript": "5.4.3",
+    "unplugin-ast": "^0.9.0"
+  }
 }

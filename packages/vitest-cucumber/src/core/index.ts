@@ -6,12 +6,12 @@ import { ScenarioOutline } from "./scenarioOutline";
 export const feature = describe;
 
 export function scenario(scenarioName: string, testOptions?: TestOptions) {
-	return new Scenario({ scenarioName, testOptions });
+  return new Scenario({ scenarioName, testOptions });
 }
 
 export function scenarioOutline(
-	scenarioName: string,
-	testOptions?: TestOptions,
+  scenarioName: string,
+  testOptions?: TestOptions,
 ) {
-	return new ScenarioOutline({ scenarioName, testOptions });
+  return new ScenarioOutline({ scenarioName, testOptions });
 }
