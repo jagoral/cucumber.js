@@ -53,33 +53,28 @@ Feature("New Todo", () => {
       await expect(input).toBeEmpty();
     });
   });
-});
 
-Feature("Mark all as completed", () => {
-  Scenario(
-    "should allow me to mark all items as completed",
-    async ({ page, And, When, Then }) => {
-      await When("I have multiple todo items", async () => {
-        await createDefaultTodos(page);
-      });
+  Scenario("Marking as completed", async ({ page, And, When, Then }) => {
+    await When("I have multiple todo items", async () => {
+      await createDefaultTodos(page);
+    });
 
-      await And("I mark all items as completed", async () => {
-        await page.getByLabel("Mark all as complete").check();
-      });
+    await And("I mark all items as completed", async () => {
+      await page.getByLabel("Mark all as complete").check();
+    });
 
-      await Then("all items should be marked as completed", async () => {
-        await expect(page.getByTestId("todo-item")).toHaveClass([
-          "completed",
-          "completed",
-          "completed",
-        ]);
-      });
+    await Then("all items should be marked as completed", async () => {
+      await expect(page.getByTestId("todo-item")).toHaveClass([
+        "completed",
+        "completed",
+        "completed",
+      ]);
+    });
 
-      await And("todo count should be updated", async () => {
-        await expect(page.getByTestId("todo-count")).toHaveText("0 items left");
-      });
-    },
-  );
+    await And("todo count should be updated", async () => {
+      await expect(page.getByTestId("todo-count")).toHaveText("0 items left");
+    });
+  });
 });
 
 async function createDefaultTodos(page: Page) {
