@@ -63,6 +63,7 @@ jobs:
         run: pnpm turbo build --filter=...@repo/playwright-example
 
       - name: Install Playwright Browsers
+        working-directory: ./examples/playwright
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests
