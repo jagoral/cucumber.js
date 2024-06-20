@@ -39,7 +39,6 @@ feature("Todo List Management", () => {
     })
     .when("I complete the todo item with id 1", ({ todoList }) => {
       todoList.completeTodo(1);
-      return {};
     })
     .then(
       "the item should be marked as completed",
@@ -59,7 +58,6 @@ feature("Todo List Management", () => {
     })
     .when("I remove the todo item with id 1", ({ todoList }) => {
       todoList.removeTodo(1);
-      return {};
     })
     .then("the todo list should be empty", ({ todoList }) => {
       expect(todoList.getTodos().length).toBe(0);
