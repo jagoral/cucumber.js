@@ -69,4 +69,18 @@ describe("transformScenarios", () => {
 
     expect(await getTransformedScenario(code)).toMatchSnapshot();
   });
+
+  it("should handle new EcmaScript syntax", async () => {
+    const code = `
+    scenario("test")
+      .when("a", async () => {
+        return { a: 1 }
+      })
+      .then("b", (state) => {
+        state?.b;
+      });
+  `;
+
+    expect(await getTransformedScenario(code)).toMatchSnapshot();
+  });
 });

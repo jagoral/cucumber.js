@@ -42,6 +42,20 @@ exports[`transformScenarios > should add .build() when chain identifier 1`] = `
 "
 `;
 
+exports[`transformScenarios > should handle new EcmaScript syntax 1`] = `
+"scenario("test")
+  .when("a", async () => {
+    return {
+      a: 1,
+    };
+  })
+  .then("b", (state) => {
+    state?.b;
+  })
+  .build();
+"
+`;
+
 exports[`transformScenarios > should skip adding .build() when its already added 1`] = `
 "scenario("test")
   .when("a", () => {})

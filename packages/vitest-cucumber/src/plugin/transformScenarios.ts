@@ -1,4 +1,5 @@
 import * as recast from "recast";
+import typescriptParser from "recast/parsers/typescript";
 
 const { identifier, memberExpression, callExpression } = recast.types.builders;
 const { MemberExpression, ExpressionStatement, Identifier, CallExpression } =
@@ -7,7 +8,9 @@ const { MemberExpression, ExpressionStatement, Identifier, CallExpression } =
 const scenarioNames = ["scenario", "scenarioOutline"];
 
 export function transformScenarios(code: string): string {
-  const ast = recast.parse(code);
+  const ast = recast.parse(code, {
+    parser: typescriptParser,
+  });
   recast.visit(ast, {
     visitCallExpression(path) {
       const { node } = path;

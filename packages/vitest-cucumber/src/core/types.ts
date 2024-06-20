@@ -6,7 +6,11 @@ export type ScenarioContext = {
   testOptions?: TestOptions;
 };
 
-export type MergeState<TState, TEnhancedState> = Merge<TState, TEnhancedState>;
+export type MergeState<TLeft, TRight> = TLeft extends void
+  ? TRight
+  : TRight extends void
+    ? TLeft
+    : Merge<TLeft, TRight>;
 
 export type StepReturn<TReturnState> = TReturnState extends never
   ? never

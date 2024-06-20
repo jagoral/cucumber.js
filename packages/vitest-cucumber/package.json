@@ -1,17 +1,22 @@
 {
   "name": "@jagoral/vitest-cucumber",
   "version": "0.0.1",
+  "author": "Tomasz Góral <tomasz.goral@outlook.com>",
   "description": "A Cucumber-ish plugin for vitest",
   "type": "module",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": ["dist", "src"],
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./plugin": {
+      "import": "./dist/plugin.js",
+      "require": "./dist/plugin.cjs",
+      "types": "./dist/plugin.d.ts"
     }
   },
   "scripts": {

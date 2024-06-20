@@ -1,0 +1,15 @@
+{
+  "name": "@repo/vitest-example",
+  "author": "Tomasz Góral <tomasz.goral@outlook.com>",
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run"
+  },
+  "devDependencies": {
+    "@jagoral/vitest-cucumber": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "vite": "^5.2.7",
+    "vitest": "^1.4.0",
+    "typescript": "5.4.3"
+  }
+}

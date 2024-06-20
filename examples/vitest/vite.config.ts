@@ -2,8 +2,8 @@
 
 // Configure Vitest (https://vitest.dev/config/)
 
+import vitestCucumberPlugin from "@jagoral/vitest-cucumber/plugin";
 import { defineConfig } from "vite";
-import { vitestCucumberPlugin } from "./src/plugin";
 
 export default defineConfig({
   test: {
