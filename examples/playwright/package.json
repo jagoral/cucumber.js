@@ -1,0 +1,13 @@
+{
+  "name": "@repo/playwright-example",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx playwright test"
+  },
+  "author": "Tomasz Góral <tomasz.goral@outlook.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.44.1",
+    "@jagoral/playwright-cucumber": "workspace:*"
+  }
+}

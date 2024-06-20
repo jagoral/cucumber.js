@@ -16,6 +16,9 @@
       "suspicious": {
         "noExplicitAny": "off",
         "noConfusingVoidType": "off"
+      },
+      "correctness": {
+        "noEmptyPattern": "off"
       }
     }
   }
