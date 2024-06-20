@@ -15,7 +15,6 @@
     },
     "./plugin": {
       "import": "./dist/plugin.js",
-      "require": "./dist/plugin.cjs",
       "types": "./dist/plugin.d.ts"
     }
   },

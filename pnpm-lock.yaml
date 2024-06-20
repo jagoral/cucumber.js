@@ -60,12 +60,9 @@ importers:
 
   packages/vitest-cucumber:
     dependencies:
-      '@playwright/test':
-        specifier: ^1.44.1
-        version: 1.44.1
-      playwright:
-        specifier: ^1.44.1
-        version: 1.44.1
+      recast:
+        specifier: ^0.23.6
+        version: 0.23.6
       vite:
         specifier: ^5.2.7
         version: 5.2.8(@types/node@20.14.6)
@@ -82,9 +79,6 @@ importers:
       prettier:
         specifier: 3.2.5
         version: 3.2.5
-      recast:
-        specifier: 0.23.6
-        version: 0.23.6
       tsup:
         specifier: 8.0.2
         version: 8.0.2(postcss@8.4.38)(typescript@5.4.3)
