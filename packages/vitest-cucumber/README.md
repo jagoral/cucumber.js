@@ -2,7 +2,9 @@
 
 Cucumber syntax extensions for [`Vitest`](https://vitest.dev/), enabling you to write BDD-style tests with ease and efficiency.
 
-![Screenshot presenting the failing test in vitest.](./demo.png)
+<p align="center">
+  <img width="600" src="./typesafety.gif" alt="GIF presenting the typesafety for step state and variables.">
+</p>
 
 ## Installation
 
