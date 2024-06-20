@@ -1,6 +1,7 @@
 {
   "name": "@repo/vitest-example",
   "author": "Tomasz Góral <tomasz.goral@outlook.com>",
+  "private": true,
   "type": "module",
   "scripts": {
     "test": "vitest",

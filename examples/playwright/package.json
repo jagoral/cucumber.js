@@ -1,10 +1,9 @@
 {
   "name": "@repo/playwright-example",
   "main": "index.js",
-  "scripts": {
-    "test": "npx playwright test"
-  },
+  "private": true,
   "author": "Tomasz Góral <tomasz.goral@outlook.com>",
+  "scripts": {},
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.44.1",

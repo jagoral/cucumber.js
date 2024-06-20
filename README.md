@@ -1,4 +1,4 @@
-# Cucumber syntax extensions for `vitest` and `playwright`
+# Cucumber syntax for `vitest` and `playwright`
 
 This repository contains two powerful extensions for integrating Cucumber-like syntax with [Playwright](https://playwright.dev/) and [vitest](https://vitest.dev/), enhancing your testing workflow with behavior-driven development (BDD) capabilities.
 

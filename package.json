@@ -5,12 +5,15 @@
   "private": true,
   "scripts": {
     "build": "turbo build",
+    "changeset": "changeset",
     "lint": "biome check .",
     "lint:fix": "biome check --apply .",
+    "release": "turbo build --filter=\"./packages/*\" && changeset publish",
     "test:run": "turbo test:run"
   },
   "devDependencies": {
     "@biomejs/biome": "1.6.3",
+    "@changesets/cli": "2.27.5",
     "@repo/typescript-config": "workspace:*",
     "lefthook": "1.6.7",
     "turbo": "2.0.4"
